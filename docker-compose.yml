@@ -1,0 +1,14 @@
+version: "3.9"
+services:
+  meeting-guardian:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./token.json:/app/token.json:ro
+      - ./credentials.json:/app/credentials.json:ro
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
