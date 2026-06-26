@@ -1,0 +1,22 @@
+# Deployment agendado: digest diário às 06:00 (America/Sao_Paulo)
+# Crie com:  ant beta:deployments create < deployments/daily-digest.yaml
+# Substitua $AGENT_ID e $ENVIRONMENT_ID (ou exporte como variáveis e use envsubst).
+
+name: Meeting Guardian — Digest diário
+agent: $AGENT_ID
+environment_id: $ENVIRONMENT_ID
+
+# Credenciais dos MCP (Calendar/Slack/Email) via vault registrado previamente.
+vault_ids:
+  - $VAULT_ID
+
+initial_events:
+  - type: user.message
+    content:
+      - type: text
+        text: GERAR_DIGEST_DIARIO
+
+schedule:
+  type: cron
+  expression: "0 6 * * *"      # todo dia às 06:00
+  timezone: America/Sao_Paulo

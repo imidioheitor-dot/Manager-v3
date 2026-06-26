@@ -1,0 +1,29 @@
+# Deployment agendado: varredura de lembretes a cada 15 min, das 06:00 às 23:00.
+# Como o cron dispara em horário fixo (não "30 min antes de cada evento"), o
+# agente roda com frequência e, a cada execução, verifica se há eventos
+# começando em ~30 min que ainda não foram lembrados (dedup via memory store).
+#
+# Crie com:  ant beta:deployments create < deployments/reminder-sweep.yaml
+
+name: Meeting Guardian — Varredura de lembretes
+agent: $AGENT_ID
+environment_id: $ENVIRONMENT_ID
+
+vault_ids:
+  - $VAULT_ID
+
+# Memória persistente para deduplicar lembretes já enviados no dia.
+# (Confirme o formato exato em /docs/en/managed-agents/memory.)
+memory_stores:
+  - $MEMORY_STORE_ID
+
+initial_events:
+  - type: user.message
+    content:
+      - type: text
+        text: VARRER_LEMBRETES
+
+schedule:
+  type: cron
+  expression: "*/15 6-23 * * *"   # a cada 15 min, das 06h às 23h
+  timezone: America/Sao_Paulo
